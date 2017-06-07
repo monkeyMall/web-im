@@ -45,20 +45,20 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(228);
+	module.exports = __webpack_require__(249);
 
 
 /***/ },
 
-/***/ 228:
+/***/ 249:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	var Util = __webpack_require__(230);
-	var Call = __webpack_require__(231);
+	var Util = __webpack_require__(251);
+	var Call = __webpack_require__(252);
 
 	window.WebIM = typeof WebIM !== 'undefined' ? WebIM : {};
 	WebIM.WebRTC = WebIM.WebRTC || {};
@@ -81,11 +81,11 @@
 	}
 
 	//WebIM.WebRTC.supportPRAnswer = false;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(229)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(250)(module)))
 
 /***/ },
 
-/***/ 229:
+/***/ 250:
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -102,7 +102,7 @@
 
 /***/ },
 
-/***/ 230:
+/***/ 251:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -517,16 +517,16 @@
 
 /***/ },
 
-/***/ 231:
+/***/ 252:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Util = __webpack_require__(230);
-	var RTCIQHandler = __webpack_require__(232);
-	var API = __webpack_require__(233);
-	var WebRTC = __webpack_require__(234);
-	var CommonPattern = __webpack_require__(235);
+	var Util = __webpack_require__(251);
+	var RTCIQHandler = __webpack_require__(253);
+	var API = __webpack_require__(254);
+	var WebRTC = __webpack_require__(255);
+	var CommonPattern = __webpack_require__(256);
 
 	var RouteTo = API.RouteTo;
 	var Api = API.Api;
@@ -712,7 +712,7 @@
 
 /***/ },
 
-/***/ 232:
+/***/ 253:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -721,9 +721,9 @@
 	 * IQ Message，IM -> CMServer --> IM
 	 */
 
-	var _util = __webpack_require__(230);
+	var _util = __webpack_require__(251);
 	var _logger = _util.logger;
-	var API = __webpack_require__(233);
+	var API = __webpack_require__(254);
 	var RouteTo = API.RouteTo;
 
 	var CONFERENCE_XMLNS = "urn:xmpp:media-conference";
@@ -1045,7 +1045,7 @@
 
 /***/ },
 
-/***/ 233:
+/***/ 254:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1055,7 +1055,7 @@
 	/**
 	 * API
 	 */
-	var _util = __webpack_require__(230);
+	var _util = __webpack_require__(251);
 	var _logger = _util.logger;
 
 	var _RouteTo = {
@@ -1681,7 +1681,7 @@
 
 /***/ },
 
-/***/ 234:
+/***/ 255:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1724,7 +1724,7 @@
 	 *                                                  |
 	 *
 	 */
-	var _util = __webpack_require__(230);
+	var _util = __webpack_require__(251);
 	var _logger = _util.logger;
 
 	var _WebrtcStatistics = {
@@ -2381,7 +2381,7 @@
 
 /***/ },
 
-/***/ 235:
+/***/ 256:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2389,8 +2389,8 @@
 	/**
 	 * P2P
 	 */
-	var _util = __webpack_require__(230);
-	var RouteTo = __webpack_require__(233).RouteTo;
+	var _util = __webpack_require__(251);
+	var RouteTo = __webpack_require__(254).RouteTo;
 	var _logger = _util.logger;
 
 	var P2PRouteTo = RouteTo({

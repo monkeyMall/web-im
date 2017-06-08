@@ -14,7 +14,9 @@ WebIM.config = {
     /*
      * Backend REST API URL
      */
-    apiURL: (location.protocol === 'https:' ? 'https:' : 'http:') + '//a1.easemob.com',
+    // apiURL: (location.protocol === 'https:' ? 'https:' : 'http:') + '//a1.easemob.com',
+    apiURL: (location.protocol === 'https:' ? 'https:' : 'http:') + '//118.193.28.212:31080',
+
     /*
      * Application AppKey
      */
@@ -77,14 +79,9 @@ WebIM.config = {
      * type=none Will not encrypt text messages
      * type=base64 Will encrypt text messages into base64 code
      * type=aes Will encrypt text messages into aes code
-     * mode=cbc Will encrypt text messages into aes code of cbc mode
-     * mode=ebc Will encrypt text messages into aes code of ebc mode
      */
     encrypt: {
-        type: 'aes',
-        mode: 'ebc',
-        key: '123456789easemob',
-        iv: '0000000000000000',
+        type: 'aes'
     }
 
 };

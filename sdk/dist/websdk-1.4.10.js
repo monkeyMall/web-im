@@ -2772,7 +2772,7 @@
 	 * Fix it by overide  _onMessage
 	 */
 	Strophe.Websocket.prototype._onMessage = function (message) {
-	    WebIM && WebIM.config.isDebug && console.log(WebIM.utils.ts() + 'recv:', message.data);
+	    WebIM && WebIM.config.isDebug && console.log(message.data);
 	    var elem, data;
 	    // check for closing stream
 	    // var close = '<close xmlns="urn:ietf:params:xml:ns:xmpp-framing" />';
@@ -3004,6 +3004,39 @@
 	    return rouster;
 	};
 
+	var _getAESKey = function _getAESKey(options, conn) {
+	    // console.log(options)
+	    // console.log('_getAESKey')
+	    var self = this;
+	    var suc = function suc(resp, xhr) {
+	        console.log('suc');
+	        console.log(resp);
+	        //{"algorithm": "AES", "mode": "ECB", "padding": "PKCS5Padding", "key": "easemob@@easemob"}
+	        conn.encrypt.mode = resp.data.mode.toLowerCase();
+	        conn.encrypt.key = CryptoJS.enc.Utf8.parse(resp.data.key);
+	        conn.encrypt.iv = CryptoJS.enc.Utf8.parse('0000000000000000');
+	        _login(options, conn);
+	    };
+	    var error = function error(res, xhr, msg) {
+	        console.log('error');
+	        console.log(res);
+	    };
+
+	    // console.log(conn)
+	    var apiUrl = conn.context.apiUrl;
+	    var appName = conn.context.appName;
+	    var orgName = conn.context.orgName;
+	    var options2 = {
+	        url: apiUrl + '/' + orgName + '/' + appName + '/encrypt_info',
+	        dataType: 'json',
+	        type: 'GET',
+	        headers: { 'Authorization': 'Bearer ' + conn.context.accessToken },
+	        success: suc || _utils.emptyfn,
+	        error: error || _utils.emptyfn
+	    };
+	    _utils.ajax(options2);
+	};
+
 	var _login = function _login(options, conn) {
 	    var accessToken = options.access_token || '';
 	    if (accessToken == '') {
@@ -3014,8 +3047,15 @@
 	        });
 	        return;
 	    }
+
 	    conn.context.accessToken = options.access_token;
 	    conn.context.accessTokenExpires = options.expires_in;
+
+	    if (conn.encrypt.type === 'aes' && !conn.encrypt.mode) {
+	        _getAESKey(options, conn);
+	        return;
+	    }
+
 	    var stropheConn = null;
 	    if (conn.isOpening() && conn.context.stropheConn) {
 	        stropheConn = conn.context.stropheConn;
@@ -3327,6 +3367,7 @@
 	    this.sendQueue = new Queue(); //instead of sending message immediately,cache them in this queue
 	    this.intervalId = null; //clearInterval return value
 	    this.apiUrl = options.apiUrl || '';
+	    this.context.apiUrl = this.apiUrl;
 	    this.isWindowSDK = options.isWindowSDK || false;
 	    this.encrypt = options.encrypt || {};
 
@@ -4036,9 +4077,9 @@
 	                    if (self.encrypt.type === 'base64') {
 	                        receiveMsg = atob(receiveMsg);
 	                    } else if (self.encrypt.type === 'aes') {
-	                        var key = CryptoJS.enc.Utf8.parse(WebIM.config.encrypt.key);
-	                        var iv = CryptoJS.enc.Utf8.parse(WebIM.config.encrypt.iv);
-	                        var mode = WebIM.config.encrypt.mode.toLowerCase();
+	                        var key = self.encrypt.key;
+	                        var iv = self.encrypt.iv;
+	                        var mode = self.encrypt.mode;
 	                        var option = {};
 	                        if (mode === 'cbc') {
 	                            option = {
@@ -4046,7 +4087,7 @@
 	                                mode: CryptoJS.mode.CBC,
 	                                padding: CryptoJS.pad.Pkcs7
 	                            };
-	                        } else if (mode === 'ebc') {
+	                        } else if (mode === 'ecb') {
 	                            option = {
 	                                mode: CryptoJS.mode.ECB,
 	                                padding: CryptoJS.pad.Pkcs7
@@ -4325,15 +4366,17 @@
 	};
 
 	connection.prototype.send = function (messageSource) {
-	    var message = _.clone(messageSource);
+	    var message = messageSource;
 	    var self = this;
-	    if (message.type === 'txt') {
+	    if (message.type === 'txt' && (self.encrypt.type === 'base64' || self.encrypt.type === 'aes')) {
+	        message = _.clone(messageSource);
 	        if (self.encrypt.type === 'base64') {
 	            message.msg = btoa(message.msg);
 	        } else if (self.encrypt.type === 'aes') {
-	            var key = CryptoJS.enc.Utf8.parse(self.encrypt.key);
-	            var iv = CryptoJS.enc.Utf8.parse(self.encrypt.iv);
-	            var mode = self.encrypt.mode.toLowerCase();
+	            console.log(this.encrypt);
+	            var key = self.encrypt.key;
+	            var iv = self.encrypt.iv;
+	            var mode = self.encrypt.mode;
 	            var option = {};
 	            if (mode === 'cbc') {
 	                option = {
@@ -4341,7 +4384,7 @@
 	                    mode: CryptoJS.mode.CBC,
 	                    padding: CryptoJS.pad.Pkcs7
 	                };
-	            } else if (mode === 'ebc') {
+	            } else if (mode === 'ecb') {
 	                option = {
 	                    mode: CryptoJS.mode.ECB,
 	                    padding: CryptoJS.pad.Pkcs7
